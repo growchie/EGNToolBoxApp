@@ -16,7 +16,6 @@ namespace EGNToolBox
         }
     }
 
-
     public class EGN
     {
         private readonly byte[] Egn = new byte[10];
