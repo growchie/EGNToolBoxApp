@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EGNToolBox
 {
-    public class Region
+    internal class Region
     {
         public string Name { get; set; }
         public int StartRegion { get; set; }
@@ -21,7 +21,7 @@ namespace EGNToolBox
         private readonly byte[] Egn = new byte[10];
         private readonly byte[] Weights = new byte[9] { 2, 4, 8, 5, 10, 9, 7, 3, 6 };
 
-        public EGN(ulong egn = 0)
+        public EGN(ulong egn)
         {
             if (egn < 9952319999)
             {
@@ -31,6 +31,32 @@ namespace EGNToolBox
                     Egn[i] = (byte)(egn % 10);
                     egn /= 10;
                 }
+            }
+            else
+            {
+                throw new ArgumentException("Параметърът е извън обхвата!");
+            }
+        }
+
+        public EGN(string egnstr)
+        {
+            try
+            {
+                ulong egn = Convert.ToUInt64(egnstr);
+                if (egn < 9952319999)
+                {
+
+                    for (int i = 9; i >= 0; i--)
+                    {
+                        Egn[i] = (byte)(egn % 10);
+                        egn /= 10;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw e;
             }
         }
 
@@ -167,7 +193,7 @@ namespace EGNToolBox
         private static readonly Random random = new Random();
         private readonly string[] months = new string[12] {" януари ", " февруари ", " март ",
         " април ", " май ", " юни ", " юли ", " август ", " септевмри ", " октомври ", " ноември ", " декември "};
-        public readonly List<Region> regions;
+        internal readonly List<Region> regions;
         public EGNTools()
         {
             regions = new List<Region>
@@ -206,56 +232,77 @@ namespace EGNToolBox
 
         public string Info(ulong egn)
         {
-            var infoEGN = new EGN(egn);
-            if (!infoEGN.IsValid())
-                return "Невалидно ЕГН";
-
-            string result = "Лице, родено на ";
-
-            result += infoEGN.Day.ToString() + months[infoEGN.Month - 1] + infoEGN.Year.ToString();
-
-            bool found = false;
-            int minIndex = 0;
-            int maxIndex = 28;
-            int queryIndex = 0;
-            do
+            try
             {
-                queryIndex = (maxIndex + minIndex) / 2;
-                if (regions[queryIndex].StartRegion <= infoEGN.Region && regions[queryIndex].EndRegion >= infoEGN.Region)
+                var infoEGN = new EGN(egn);
+                if (!infoEGN.IsValid())
+                    return "Невалидно ЕГН";
+
+                string result = "Лице, родено на ";
+
+                result += infoEGN.Day.ToString() + months[infoEGN.Month - 1] + infoEGN.Year.ToString();
+
+                bool found = false;
+                int minIndex = 0;
+                int maxIndex = 28;
+                int queryIndex = 0;
+                do
                 {
-                    result += " в регион " + regions[queryIndex].Name;
-                    found = true;
-                }
-                else if (regions[queryIndex].StartRegion < infoEGN.Region)
+                    queryIndex = (maxIndex + minIndex) / 2;
+                    if (regions[queryIndex].StartRegion <= infoEGN.Region && regions[queryIndex].EndRegion >= infoEGN.Region)
+                    {
+                        result += " в регион " + regions[queryIndex].Name;
+                        found = true;
+                    }
+                    else if (regions[queryIndex].StartRegion < infoEGN.Region)
+                    {
+                        minIndex = queryIndex;
+                    }
+                    else
+                    {
+                        maxIndex = queryIndex;
+                    }
+                } while (!found);
+
+                if (infoEGN.IsMale)
                 {
-                    minIndex = queryIndex;
+                    result += ", от мъжки пол,";
                 }
                 else
                 {
-                    maxIndex = queryIndex;
+                    result += ", от женски пол,";
                 }
-            } while (!found);
 
-            if (infoEGN.IsMale)
-            {
-                result += ", от мъжки пол,";
+                int lastNumber = infoEGN.Region;
+                if (infoEGN.IsMale)
+                {
+                    lastNumber--;
+                }
+
+                int burthNumber = (lastNumber - regions[queryIndex].StartRegion) / 2 + 1;
+
+                result += $" родено {burthNumber} подред.";
+
+                return result;
             }
-            else
+            catch (Exception e)
             {
-                result += ", от женски пол,";
+                return e.Message;
             }
+        }
 
-            int lastNumber = infoEGN.Region;
-            if (infoEGN.IsMale)
+        public string Info(string egn)
+        {
+            ulong egnUlong = 0;
+            try
             {
-                lastNumber--;
+                egnUlong = Convert.ToUInt64(egn);
             }
-
-            int burthNumber = (lastNumber - regions[queryIndex].StartRegion) / 2 + 1;
-
-            result += $" родено {burthNumber} подред.";
-
-            return result;
+            catch (Exception)
+            {
+                return "Невалидно ЕГН!";
+            }
+            return Info(egnUlong);
         }
 
         public ulong Generate(DateTime date, bool sex, int region)
