@@ -173,6 +173,11 @@ namespace EGNToolBox
 
         public void FixChecksum()
         {
+            if (this.IsValid())
+            {
+                return;
+            }
+
             int checksum = 0;
             for (int i = 0; i < 9; i++)
             {
