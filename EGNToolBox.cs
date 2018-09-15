@@ -34,7 +34,7 @@ namespace EGNToolBox
             }
             else
             {
-                throw new ArgumentException("Параметърът е извън обхвата!");
+                throw new ArgumentException("EGN(ulong egn) Параметърът е извън обхвата!");
             }
         }
 

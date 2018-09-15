@@ -14,6 +14,7 @@ namespace VerificationToolBox
         {
             if (eik > 9999999999999)
             {
+                Console.WriteLine("EIK(ulong) Параметърът е извън обхвата!");
                 throw new ArgumentException("Параметърът е извън обхвата!");
             }
             else if (eik < 999999999)
@@ -51,6 +52,7 @@ namespace VerificationToolBox
 
             if (eik.Length != 9 && eik.Length != 13)
             {
+                Console.WriteLine("EIK(string) Параметърът е извън обхвата!");
                 throw new ArgumentException("Параметърът е извън обхвата!");
             }
             else if (eik.Length == 9)
@@ -160,7 +162,7 @@ namespace VerificationToolBox
             return true;
         }
 
-        public void FixChecksum()
+        protected void FixChecksum()
         {
             if (this.IsValid())
             {
@@ -245,66 +247,14 @@ namespace VerificationToolBox
         
     }
 
-    class EIKToolBox
+    public class EIKToolBox : EIK
     {
-    }
-
-    public class IBAN
-    {
-        private readonly string _IBAN;
-
-        public IBAN(string iban)
+        public EIKToolBox(ulong eik) : base(eik)
         {
-            if (iban.Length != 22)
-            {
-                throw new ArgumentException("Невалиден български IBAN!");
-            }
-            _IBAN = iban;
         }
 
-        public bool IsValid()
+        public EIKToolBox(string eik) : base(eik)
         {
-            string inverted = _IBAN.Substring(4, 18) + _IBAN.Substring(0, 4);
-            string converted = "";
-            for (int i = 0; i < inverted.Length; i++)
-            {
-                if (inverted[i] >= 'A' && inverted[i] <= 'Z')
-                {
-                    uint substr = Convert.ToUInt32(inverted[i]) - 55;
-                    converted += substr.ToString();
-                }
-                else
-                {
-                    converted += inverted[i];
-                }
-            }
-
-            int segstart = 0;
-            int step = 9;
-            string prepended = "";
-            ulong number = 0;
-            while (segstart < converted.Length - step)
-            {
-                number = Convert.ToUInt64(prepended + converted.Substring(segstart, step));
-                ulong remainder = number % 97;
-                prepended = remainder.ToString();
-                if (remainder < 10)
-                {
-                    prepended = "0" + prepended;
-                }
-                segstart = segstart + step;
-                step = 7;
-            }
-
-            number = Convert.ToUInt64(prepended + converted.Substring(segstart));
-
-            ulong result = number % 97;
-            if (result != 1)
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }
