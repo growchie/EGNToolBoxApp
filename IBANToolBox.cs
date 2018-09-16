@@ -89,7 +89,11 @@ namespace VerificationToolBox
     public class IBANToolBox
     {
         private static readonly Random random = new Random();
-        internal readonly List<BgBank> bgBanks;
+        private readonly List<BgBank> bgBanks;
+        private readonly string BankValidDate;
+        private readonly List<BgBank> bgOther;
+        private readonly string OtherValidDate;
+
         public IBANToolBox()
         {
             try
@@ -97,7 +101,11 @@ namespace VerificationToolBox
                 using (StreamReader r = new StreamReader("banks.json"))
                 {
                     string json = r.ReadToEnd();
-                    bgBanks = JsonConvert.DeserializeObject<List<BgBank>>(json);
+                    var jsonParse = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Object>>>(json);
+                    BankValidDate = jsonParse["banks"]["date"].ToString();
+                    bgBanks = JsonConvert.DeserializeObject<List<BgBank>>(jsonParse["banks"]["data"].ToString());
+                    OtherValidDate = jsonParse["others"]["date"].ToString();
+                    bgOther = JsonConvert.DeserializeObject<List<BgBank>>(jsonParse["others"]["data"].ToString());
                 }
             }
             catch (Exception e)
@@ -129,12 +137,26 @@ namespace VerificationToolBox
                 where _name.BAE == _iban.BAE
                 select _name;
 
+            bool bank = true;
+
             if (!query.Any())
             {
-                return "Липсва информация за такава банка!";
-            }
+                bank = false;
+                query =
+                    from _name in bgOther
+                    where _name.BAE == _iban.BAE
+                    select _name;
 
-            return $"Име на банка: {query.FirstOrDefault().name} с BAE: {query.FirstOrDefault().BAE} и BIC: {query.FirstOrDefault().BIC}";
+                if (!query.Any())
+                    return "Липсва информация за такава банка!";
+            }
+            if (bank)
+            {
+                return $"Име на банка: {query.FirstOrDefault().name} с BAE: {query.FirstOrDefault().BAE} и BIC: {query.FirstOrDefault().BIC}." +
+                    $" Последна актуализация: {BankValidDate}";
+            }
+            return $"Име на друга финансова институция: {query.FirstOrDefault().name} с BAE: {query.FirstOrDefault().BAE}" +
+                $"и BIC: {query.FirstOrDefault().BIC}. Последна актуализация: {OtherValidDate}";
         }
 
         public Dictionary<int, string> AvailableBanks()
