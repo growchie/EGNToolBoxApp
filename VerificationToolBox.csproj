@@ -5,27 +5,25 @@
     <SignAssembly>false</SignAssembly>
     <Authors>Velislav Varbanov</Authors>
     <Company />
-    <Description>Верификация на ЕГН, генериране на тестови ЕГН-та, разкодиране на информацията в ЕГН. Верификация на ЕИК. Верификация на български IBAN номера.</Description>
+    <Description>Верификация на ЕГН, генериране на тестови (несъществуващи) ЕГН-та, разкодиране на информацията в ЕГН. Верификация на ЕИК. Верификация на български IBAN номера, информация за българска банка по IBAN номер, генериране на тестов (несъществуващ) IBAN номер.</Description>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EGN, IBAN, EIK, ЕГН, ЕИК</PackageTags>
     <NeutralLanguage>bg</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/growchie/EGNToolBoxApp</RepositoryUrl>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
-    <Version>2.0.0-alfa</Version>
+    <AssemblyVersion>2.0.0.1</AssemblyVersion>
+    <FileVersion>2.0.0.1</FileVersion>
+    <Version>2.0.0</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
   <ItemGroup>
     <None Update="banks.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
 </Project>
