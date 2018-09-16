@@ -12,8 +12,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/growchie/EGNToolBoxApp</RepositoryUrl>
     <AssemblyVersion>2.0.0.1</AssemblyVersion>
-    <FileVersion>2.0.0.1</FileVersion>
-    <Version>2.0.0</Version>
+    <FileVersion>2.0.0.2</FileVersion>
+    <Version>2.0.0-beta</Version>
   </PropertyGroup>
 
   <ItemGroup>
