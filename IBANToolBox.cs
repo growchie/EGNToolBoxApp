@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 
-namespace VerificationToolBox
+namespace IBANToolBox
 {
     internal class BgBank
     {

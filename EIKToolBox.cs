@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace VerificationToolBox
+namespace EIKToolBox
 {
     public class EIK
     {
