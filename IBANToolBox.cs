@@ -23,7 +23,7 @@ namespace IBANToolBox
         {
             if (iban.Length < 16 || iban.Length > 34)
             {
-                throw new ArgumentException("Невалиден IBAN!");
+                throw new ArgumentException("Невалиден формат на IBAN!");
             }
             _IBAN = iban.ToUpper();
         }
