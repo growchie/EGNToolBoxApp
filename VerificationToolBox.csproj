@@ -11,9 +11,9 @@
     <NeutralLanguage>bg</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/growchie/EGNToolBoxApp</RepositoryUrl>
-    <AssemblyVersion>2.0.2.0</AssemblyVersion>
-    <FileVersion>2.0.2.0</FileVersion>
-    <Version>2.0.2-beta</Version>
+    <AssemblyVersion>2.0.3.0</AssemblyVersion>
+    <FileVersion>2.0.3.0</FileVersion>
+    <Version>2.0.3</Version>
     <Copyright>Velislav Varbanov</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
